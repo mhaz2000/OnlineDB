@@ -1,0 +1,88 @@
+﻿@using TableProject.Enum
+@{
+    ViewBag.Title = "Index";
+    int count = Convert.ToInt32(TempData["count"]);
+}
+
+
+<br />
+
+
+
+@using (Html.BeginForm("CreateNewTable", "CreateTable", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h2 dir="rtl">ساخت جدول جدید</h2>
+    <hr />
+
+    <h3>@TempData["message"]</h3>
+
+
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group" dir="rtl">
+
+        <div class="col-md-12" dir="rtl">
+            <div class="col-md-6" dir="rtl">
+                @Html.Label("تعداد فیلد", new { @class = "col-md-12 control-label" })
+                @Html.TextBox("fieldNum", "", new { @class = "form-control", required = "required", Type = "number" })
+            </div>
+            <div class="col-md-6" dir="rtl">
+                @Html.Label("نام جدول", new { @class = "col-md-12 control-label" })
+                @Html.TextBox("tableName", "", new { @class = "form-control", required = "required" })
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12" dir="rtl">
+        <input type="submit" style="font-size:20px" class="btn btn-default" value="ثبت جدول جدید" />
+    </div>
+
+}
+<hr />
+
+@using (Html.BeginForm("InsertNewTable", "CreateTable", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    for (int i = 0; i < count; i++)
+    {
+        string[] fieldNames = new string[count];
+        FieldTypes[] fieldTypes = new FieldTypes[count];
+        //string[] feildTypes = new string[count];
+
+
+
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="form-group" dir="rtl">
+
+            <div class="col-md-12" dir="rtl">
+                <div class="col-md-6" dir="rtl">
+                    @Html.Label($"نوع فیلد شماره {i}", new { @class = "col-md-12 control-label" })
+                    @Html.DropDownList("fieldTypes[" + i + "]", EnumHelper.GetSelectList(typeof(FieldTypes)),
+                   "Types", new { @class = "form-control" })
+
+
+                    @*@Html.DropDownList("feildTypes[" + i + "]", new List<SelectListItem>()
+                        {
+                            new SelectListItem(){Text="int",Value="int"},
+                            new SelectListItem(){Text="string",Value="string"},
+                            new SelectListItem(){Text="char",Value="char"},
+                            new SelectListItem(){Text="float",Value="float"},
+                            new SelectListItem(){Text="double",Value="double"},
+                            new SelectListItem(){Text="datetime",Value="datetime"}
+                        })*@
+
+
+                </div>
+                <div class="col-md-6" dir="rtl">
+                    @Html.Label($"نام فیلد شماره {i}", new { @class = "col-md-12 control-label" })
+                    @Html.TextBox("fieldNames[" + i + "]", "", new { @class = "form-control", required = "required" })
+                </div>
+            </div>
+        </div>
+    }
+    if (count != 0)
+    {
+        <div class="col-md-12" dir="rtl">
+            <input type="submit" style="font-size:20px" class="btn btn-default" value="ثبت جدول جدید" />
+        </div>
+    }
+}
